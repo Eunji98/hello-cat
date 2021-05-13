@@ -2,7 +2,11 @@ console.log("app is running!");
 
 class App {
   $target = null;
-  data = [];
+  // data = [];
+  data = {
+    isAPILoading: false,
+    catList: []
+  }
 
   constructor($target) {
     this.$target = $target;
@@ -10,9 +14,20 @@ class App {
     this.searchInput = new SearchInput({
       $target,
       onSearch: keyword => {
-        api.fetchCats(keyword).then(({ data }) => this.setState(data));
+        // api.fetchCats(keyword).then(({ data }) => this.setState(data));
+        this.setState({ ...this.data, isAPILoading: true })
+        api.fetchCats(keyword).then(({ data }) => this.setState({ isAPILoading: false, catList: data }));
       }
     });
+
+    this.searchButton = new SearchButton({
+      $target,
+      onClick: async () => {
+        this.setState({ ...this.data, isAPILoading: true })
+        const data = await api.fetchRandomCats()
+        this.setState({ isAPILoading: false, catList: data })
+      }
+    })
 
     this.searchResult = new SearchResult({
       $target,
@@ -30,7 +45,7 @@ class App {
       data: {
         visible: false,
         image: null
-      }
+      },
     });
   }
 

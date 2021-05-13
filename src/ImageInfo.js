@@ -10,6 +10,10 @@ class ImageInfo {
 
     this.data = data;
 
+    this.$imageInfo.addEventListener('click', (e) => {
+      if (e.target !== this.$imageInfo) return;
+      this.setState({ ...this.data, visible: false })
+    })
     this.render();
   }
 
@@ -34,6 +38,11 @@ class ImageInfo {
             <div>태생: ${origin}</div>
           </div>
         </div>`;
+
+      document.querySelector('.close').addEventListener('click', (e) => {
+        this.setState({ ...this.data, visible: false })
+      })
+
       this.$imageInfo.style.display = "block";
     } else {
       this.$imageInfo.style.display = "none";

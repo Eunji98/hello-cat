@@ -20,7 +20,21 @@ class SearchResult {
   }
 
   render() {
-    this.$searchResult.innerHTML = this.data
+    if (this.data.isAPILoading) {
+      this.$searchResult.innerHTML = `
+        <h1>로딩 중...</h1>
+      `
+      return
+    }
+
+    if (this.data.catList.length === 0) {
+      this.$searchResult.innerHTML = `
+        <h1>검색 결과가 없습니다</h1>
+      `
+      return
+    }
+
+    this.$searchResult.innerHTML = this.data.catList
       .map(
         cat => `
           <div class="item">
@@ -32,7 +46,7 @@ class SearchResult {
 
     this.$searchResult.querySelectorAll(".item").forEach(($item, index) => {
       $item.addEventListener("click", () => {
-        this.onClick(this.data[index]);
+        this.onClick(this.data.catList[index]);
       });
     });
   }
